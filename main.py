@@ -1,12 +1,15 @@
 import discord
 import requests
 import sys
+from pytz import timezone
 from datetime import datetime
 
 EPIC_URL = "https://queue-times.com/en-US/parks/334/queue_times.json"
 ISLANDS_URL = "https://queue-times.com/en-US/parks/64/queue_times.json"
 STUDIOS_ORLANDO_URL = "https://queue-times.com/en-US/parks/65/queue_times.json"
 USJ_URL = "https://queue-times.com/en-US/parks/284/queue_times.json"
+
+tz = timezone('EST')
 
 COMMAND_URL_MAP = {
     "!EpicWaits": EPIC_URL,
@@ -59,14 +62,12 @@ async def do_help(message):
 
     await message.channel.send(embed=embed)    
 
-async def do_waits(message, url):
+async def do_waits(message, url, command):
     resp = requests.get(url)
     resp.raise_for_status()
     data = resp.json()
 
     lines = []
-    lines.append("**Wait Times**")
-
     for land in data.get("lands", []):
         lines.append(f"**{land.get('name')}**")
         for ride in land.get("rides", []):
@@ -74,13 +75,16 @@ async def do_waits(message, url):
             lines.append(f"{ride['name']}: {wait}")
         lines.append("")
 
-    lines.append(f"*Data from queue-times.com • Today at {time_12h_no_leading_zero(datetime.now())}*")
+    lines.append(f"*Data from queue-times.com • Today at {time_12h_no_leading_zero(datetime.now(tz))}*")
 
-
+    park_title = ""
+    for entry in COMMAND_HELP_MAP:
+        if(COMMAND_HELP_MAP[entry] == command):
+            park_title = entry.replace('*','')[:-2]
     description_text = "\n".join(lines)
 
     embed = discord.Embed(
-        title="Theme Park Wait Times",
+        title=f"""Wait Times for {park_title}""",
         description=description_text,
         color=0x3498db  # pretty blue
     )
@@ -96,6 +100,6 @@ async def on_message(message):
         await do_help(message)
     else:
         if(message.content in COMMAND_URL_MAP):
-            await do_waits(message, COMMAND_URL_MAP[message.content])
+            await do_waits(message, COMMAND_URL_MAP[message.content], message.content)
 
 client.run(token)
