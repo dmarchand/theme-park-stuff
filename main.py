@@ -15,16 +15,6 @@ intents.message_content = True
 
 client = discord.Client(intents=intents)
 
-def fetch_html(url: str, *, timeout: int = 20) -> str:
-    headers = {
-        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) "
-                      "AppleWebKit/537.36 (KHTML, like Gecko) "
-                      "Chrome/122.0.0.0 Safari/537.36"
-    }
-    resp = requests.get(url, headers=headers, timeout=timeout)
-    resp.raise_for_status()
-    return resp.text
-
 def time_12h_no_leading_zero(dt: datetime) -> str:
     # Windows uses %#I, Unix uses %-I
     if sys.platform.startswith("win"):
@@ -69,10 +59,7 @@ async def do_epic_waits(message):
 async def on_message(message):
     if message.author == client.user:
         return
-
-    if message.content.startswith('$hello'):
-        await message.channel.send('Hello!')
-
+    
     if message.content.startswith('!EpicWaits'):
         await do_epic_waits(message)    
 
