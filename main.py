@@ -8,6 +8,13 @@ EPIC_URL = "https://queue-times.com/en-US/parks/334/queue_times.json"
 ISLANDS_URL = "https://queue-times.com/en-US/parks/64/queue_times.json"
 STUDIOS_ORLANDO_URL = "https://queue-times.com/en-US/parks/65/queue_times.json"
 USJ_URL = "https://queue-times.com/en-US/parks/284/queue_times.json"
+USH_URL = "https://queue-times.com/en-US/parks/66/queue_times.json"
+TDL_URL = "https://queue-times.com/en-US/parks/274/queue_times.json"
+TDS_URL = "https://queue-times.com/en-US/parks/275/queue_times.json"
+EPCOT_URL = "https://queue-times.com/en-US/parks/5/queue_times.json"
+AK_URL = "https://queue-times.com/en-US/parks/8/queue_times.json"
+MK_URL = "https://queue-times.com/en-US/parks/6/queue_times.json"
+HOLLYWOOD_STUDIOS_URL = "https://queue-times.com/en-US/parks/7/queue_times.json"
 
 tz = timezone('EST')
 
@@ -15,14 +22,28 @@ COMMAND_URL_MAP = {
     "!EpicWaits": EPIC_URL,
     "!USFWaits": STUDIOS_ORLANDO_URL,
     "!IslandsWaits": ISLANDS_URL,
-    #"!USJWaits": USJ_URL
+    "!USHWaits": USH_URL,
+    "!TDLWaits": TDL_URL,
+    "!TDSWaits" : TDS_URL,
+    "!EpcotWaits" : EPCOT_URL,
+    "!AKWaits" : AK_URL,
+    "!MKWaits" : MK_URL,
+    "!HollywoodWaits": HOLLYWOOD_STUDIOS_URL,
+    "!USJWaits": USJ_URL
     }
 
 COMMAND_HELP_MAP = {
     "**Epic Universe :flag_us::** " : "!EpicWaits", 
     "**Universal Studios Orlando :flag_us::** " : "!USFWaits",
     "**Universal Studios, Islands of Advanture :flag_us::** " : "!IslandsWaits",
-    #"**Universal Studios Japan :flag_jp::** " : "!USJWaits",
+    "**Universal Studios Hollywood :flag_us::** " : "!USHWaits",
+    "**Epcot :flag_us::** " : "!EpcotWaits",
+    "**Animal Kingdom :flag_us::** " : "!AKWaits",
+    "**Disney's Magic Kingdom :flag_us::** " : "!MKWaits",
+    "**Disney Hollywood Studios :flag_us::** " : "!HollywoodWaits",
+    "**Tokyo Disneyland :flag_jp::** " : "!TDLWaits",
+    "**Tokyo Disney Sea :flag_jp::** " : "!TDSWaits",
+    "**Universal Studios Japan :flag_jp::** " : "!USJWaits",
 }
 
 with open("config", "r", encoding="utf-8") as f:
@@ -67,13 +88,21 @@ async def do_waits(message, url, command):
     resp.raise_for_status()
     data = resp.json()
 
+    print (data)
     lines = []
-    for land in data.get("lands", []):
-        lines.append(f"**{land.get('name')}**")
-        for ride in land.get("rides", []):
+    if(len(data.get("lands")) == 0):
+        print("No lands...")
+        for ride in data.get("rides", []):
             wait = f"**{ride['wait_time']} min**" if ride["is_open"] else "Closed"
             lines.append(f"{ride['name']}: {wait}")
         lines.append("")
+    else: 
+        for land in data.get("lands", []):
+            lines.append(f"**{land.get('name')}**")
+            for ride in land.get("rides", []):
+                wait = f"**{ride['wait_time']} min**" if ride["is_open"] else "Closed"
+                lines.append(f"{ride['name']}: {wait}")
+            lines.append("")
 
     lines.append(f"*Data from queue-times.com • Today at {time_12h_no_leading_zero(datetime.now(tz))}*")
 
