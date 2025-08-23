@@ -65,16 +65,16 @@ class App:
             await self.do_help()
         else:
             if message.content in self.config.commands:
-                await self.do_waits(message.content)
+                await self.do_waits(message.content, message)
 
     ## Command Handlers
 
-    async def do_response(self, title: str, description: str, color: int = None):
+    async def do_response(self, title: str, description: str, message: discord.Message, color: int = None):
         """
         Sends a response message, either through Discord or the console.
         """
         if self.config.use_discord and self.discordClient:
-            await self.discordClient.send_discord_embed(title, description, color)
+            await self.discordClient.send_discord_embed(title, description, message, color)
         else:
             print(f"{title}\n{description}")
 
@@ -94,7 +94,7 @@ class App:
             description=description_text
         )
 
-    async def do_waits(self, command: str):
+    async def do_waits(self, command: str, message: discord.Message):
         """
         Handles a wait check command for a specific park.
         """
@@ -107,6 +107,7 @@ class App:
             await self.do_response(
                 title=self.config.help_response_title,
                 description=self.config.wait_response_error_description,
+                message=message,
                 color=self.config.error_color
             )
         
@@ -132,7 +133,8 @@ class App:
         descriptionText = "\n".join(messageLines)
         await self.do_response(
             title=f"Data for {park.name}",
-            description=descriptionText
+            description=descriptionText,
+            message=message
         )
 
     ## Private helpers
@@ -175,4 +177,5 @@ async def demo(config_file: str):
 
 if __name__ == "__main__":
     config_path = sys.argv[1] if len(sys.argv) > 1 else "config.yaml"
-    asyncio.run(demo(config_path))
+    #asyncio.run(demo(config_path))
+    asyncio.run(App(config_path).startup())

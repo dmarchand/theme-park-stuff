@@ -34,8 +34,8 @@ class DiscordClient:
         if not token:
             raise ValueError("Discord token failed to load")
             return False
-        if self.debugEnabled:
-            print("Loaded token:", token)
+        #if self.debugEnabled:
+        #    print("Loaded token:", token)
         self.token = token
         return True
     
@@ -49,7 +49,7 @@ class DiscordClient:
         print("Starting Discord client...")
         self.client.run(self.token)
     
-    async def send_discord_embed(self, title: str, description: str, color: int = None):
+    async def send_discord_embed(self, title: str, description: str, message: discord.Message, color: int = None):
         """
         Sends a rich embed message to a Discord channel.
         """
@@ -60,4 +60,4 @@ class DiscordClient:
             description=description,
             color=color
         )
-        await self.client.send(embed=embed)
+        await message.channel.send(embed=embed)

@@ -1,5 +1,5 @@
 
-use_discord: false
+use_discord: true
 include_weather: true
 error_color: "0xff0000"  # red
 wait_response_title_suffix: "Wait Times"
