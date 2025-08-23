@@ -94,7 +94,7 @@ class App:
             description=description_text
         )
 
-    async def do_waits(self, command: str, message: discord.Message):
+    async def do_waits(self, command: str, message: discord.Message = None):
         """
         Handles a wait check command for a specific park.
         """

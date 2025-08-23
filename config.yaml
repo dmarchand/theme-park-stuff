@@ -86,6 +86,12 @@ parks:
     lat: 34.66577
     lon: 135.4323
     country: *country_jp
+  GID: &gid
+    name: "Gideons Cookies"
+    url: https://raw.githubusercontent.com/fpruitt/theme-park-stuff/refs/heads/master/data/queue_times/gideons.json
+    lat: 28.3711
+    lon: -81.5181
+    country: *country_us
 
 commands:
   "!EpicWaits": *epic
@@ -99,6 +105,7 @@ commands:
   "!MKWaits": *mk
   "!HollywoodWaits": *hollywood
   "!USJWaits": *usj
+  "!GideonsWaits": *gid
 
 park_client_config:
   default_land_key: "DEFAULT_LAND"
