@@ -1,0 +1,220 @@
+
+use_discord: false
+include_weather: true
+error_color: "0xff0000"  # red
+wait_response_title_suffix: "Wait Times"
+wait_response_error_description: "No wait time data available."
+help_response_title: "Theme Park Enjoyment Bot Help"
+help_command: "!WaitsHelp"
+stale_data_message: ":no_entry_sign: Rides last updated over an hour ago, this park might be **CLOSED** :no_entry_sign:"
+all_closed_message: ":no_entry_sign: All rides are closed, this park might be **CLOSED** :no_entry_sign:"
+current_weather_header: "**Current Weather**"
+weather_data_unavailable_message: "No weather data available."
+
+countries:
+  US: &country_us
+    name: "United States"
+    flag: ":flag_us:"
+  JP: &country_jp
+    name: "Japan"
+    flag: ":flag_jp:"
+
+parks:
+  Epic: &epic
+    name: "Epic Universe"
+    url: "https://queue-times.com/en-US/parks/334/queue_times.json"
+    lat: 28.4407
+    lon: -81.4479
+    country: *country_us
+  Islands: &islands
+    name: "Universal Studios, Islands of Adventure"
+    url: "https://queue-times.com/en-US/parks/64/queue_times.json"
+    lat: 28.4717
+    lon: -81.4702
+    country: *country_us
+  USF: &usf
+    name: "Universal Studios Orlando"
+    url: "https://queue-times.com/en-US/parks/65/queue_times.json"
+    lat: 28.4724
+    lon: -81.4690
+    country: *country_us
+  USH: &ush
+    name: "Universal Studios Hollywood"
+    url: "https://queue-times.com/en-US/parks/66/queue_times.json"
+    lat: 34.1371
+    lon: -118.3533
+    country: *country_us
+  TDL: &tdl
+    name: "Tokyo Disneyland"
+    url: "https://queue-times.com/en-US/parks/274/queue_times.json"
+    lat: 35.6329
+    lon: 139.8804
+    country: *country_jp
+  TDS: &tds
+    name: "Tokyo Disney Sea"
+    url: "https://queue-times.com/en-US/parks/275/queue_times.json"
+    lat: 35.6267
+    lon: 139.8851
+    country: *country_jp
+  Epcot: &epcot
+    name: "Epcot"
+    url: "https://queue-times.com/en-US/parks/5/queue_times.json"
+    lat: 28.3765
+    lon: -81.5494
+    country: *country_us
+  AK: &ak
+    name: "Animal Kingdom"
+    url: "https://queue-times.com/en-US/parks/8/queue_times.json"
+    lat: 28.3765
+    lon: -81.5494
+    country: *country_us
+  MK: &mk
+    name: "Disney's Magic Kingdom"
+    url: "https://queue-times.com/en-US/parks/6/queue_times.json"
+    lat: 28.3765
+    lon: -81.5494
+    country: *country_us
+  Hollywood: &hollywood
+    name: "Disney Hollywood Studios"
+    url: "https://queue-times.com/en-US/parks/7/queue_times.json"
+    lat: 28.3765
+    lon: -81.5494
+    country: *country_us
+  USJ: &usj
+    name: "Universal Studios Japan"
+    url: "https://queue-times.com/en-US/parks/284/queue_times.json"
+    lat: 34.66577
+    lon: 135.4323
+    country: *country_jp
+
+commands:
+  "!EpicWaits": *epic
+  "!IslandsWaits": *islands
+  "!USFWaits": *usf
+  "!USHWaits": *ush
+  "!TDLWaits": *tdl
+  "!TDSWaits": *tds
+  "!EpcotWaits": *epcot
+  "!AKWaits": *ak
+  "!MKWaits": *mk
+  "!HollywoodWaits": *hollywood
+  "!USJWaits": *usj
+
+park_client_config:
+  default_land_key: "DEFAULT_LAND"
+  single_rider_prefix: "Single Rider"
+  include_single_rider_lines: false
+  stale_data_threshold_seconds: 3600
+  
+
+discord_client_config:
+  token_filename: "config"
+  embed_color: "0x3498db" # pretty blue
+
+weather_config:
+  url: "https://api.open-meteo.com/v1/forecast"
+  cache_session_name: ".cache"
+  cache_session_expire: 3600
+  retry_count: 5
+  retry_backoff_factor: 0.2
+  unknown_emoji: "❓"
+
+
+  # The query params to pass to mateo, these are the parts of the current weather we want to know about
+  current_weather_query_params: [
+    "temperature_2m",
+    "relative_humidity_2m",
+    "precipitation", 
+    "rain", 
+    "showers", 
+    "weather_code", 
+    "wind_speed_10m"
+  ]
+  wind_speed_unit: "ms"
+  temperature_unit: "fahrenheit"
+  precipitation_unit: "inch"
+  weather_states:
+    "0":
+      emoji: "☀️"
+      description: "Clear sky"
+    "1":
+      emoji: "🌤️"
+      description: "Mainly clear"
+    "2":
+      emoji: "⛅"
+      description: "Partly cloudy"
+    "3":
+      emoji: "☁️"
+      description: "Overcast"
+    "45":
+      emoji: "🌫️"
+      description: "Fog"
+    "48":
+      emoji: "🌁"
+      description: "Depositing rime fog"
+    "51":
+      emoji: "🌦️"
+      description: "Light drizzle"
+    "53":
+      emoji: "🌧️"
+      description: "Moderate drizzle"
+    "55":
+      emoji: "🌧️"
+      description: "Dense drizzle"
+    "56":
+      emoji: "🌨️"
+      description: "Light freezing drizzle"
+    "57":
+      emoji: "🌨️"
+      description: "Dense freezing drizzle"
+    "61":
+      emoji: "🌦️"
+      description: "Slight rain"
+    "63":
+      emoji: "🌧️"
+      description: "Moderate rain"
+    "65":
+      emoji: "🌧️"
+      description: "Heavy rain"
+    "66":
+      emoji: "🌨️"
+      description: "Light freezing rain"
+    "67":
+      emoji: "🌨️"
+      description: "Heavy freezing rain"
+    "71":
+      emoji: "🌨️"
+      description: "Slight snowfall"
+    "73":
+      emoji: "❄️"
+      description: "Moderate snowfall"
+    "75":
+      emoji: "❄️"
+      description: "Heavy snowfall"
+    "77":
+      emoji: "🌨️"
+      description: "Snow grains"
+    "80":
+      emoji: "🌦️"
+      description: "Slight rain showers"
+    "81":
+      emoji: "🌧️"
+      description: "Moderate rain showers"
+    "82":
+      emoji: "⛈️"
+      description: "Violent rain showers"
+    "85":
+      emoji: "🌨️"
+      description: "Slight snow showers"
+    "86":
+      emoji: "❄️"
+      description: "Heavy snow showers"
+    "95":
+      emoji: "⛈️"
+      description: "Thunderstorm slight/moderate"
+    "96":
+      emoji: "⛈️"
+      description: "Thunderstorm with slight hail"
+    "99":
+      emoji: "🌩️"
+      description: "Thunderstorm with heavy hail"
